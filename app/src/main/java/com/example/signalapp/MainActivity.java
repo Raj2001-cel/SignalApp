@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
@@ -22,6 +25,11 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -35,16 +43,52 @@ public class MainActivity extends AppCompatActivity {
     TelephonyManager mTelephonyManager;
     MyPhoneStateListener mPhoneStatelistener;
     int mSignalStrength = 0;
+    Button wifibtn;
+    Button databtn;
+    NetworkInfo Info;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo Info = cm.getActiveNetworkInfo();
-        mTelephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
 
+        wifibtn =  findViewById(R.id.wifibtn);
+        databtn =  findViewById(R.id.databtn);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+
+                        checkNetwork();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
+
+//        Button refresh = (Button) findViewById(R.id.btn_refresh);
+//
+//        //Listening to button event
+//        refresh.setOnClickListener(new View.OnClickListener() {
+//
+//            public void onClick(View arg0) {
+//                checkNetwork();
+//            }
+//        });
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        Info = cm.getActiveNetworkInfo();
+        mTelephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        checkNetwork();
+
+    }
+
+    public void checkNetwork(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        Info = cm.getActiveNetworkInfo();
+        mTelephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         if (Info == null || !Info.isConnectedOrConnecting()) {
             Log.i("connection", "No connection");
         } else {
@@ -53,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (netType == ConnectivityManager.TYPE_WIFI) {
                 Log.i("connection", "Wifi connection");
+                Toast.makeText(this, "ON WIFI NETWORK", Toast.LENGTH_SHORT).show();
+                wifibtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.round_button_red));
+                databtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.round_button_grey));
 
                 WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -66,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
                 // Need to get wifi strength
             } else if (netType == ConnectivityManager.TYPE_MOBILE) {
                 Log.i("connection", "Mobile data network connection");
+                Toast.makeText(this, "ON Mobile Data", Toast.LENGTH_SHORT).show();
+
+                wifibtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.round_button_grey));
+                databtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.round_button_red));
                 mPhoneStatelistener = new MyPhoneStateListener();
 
                 mTelephonyManager.listen(mPhoneStatelistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
