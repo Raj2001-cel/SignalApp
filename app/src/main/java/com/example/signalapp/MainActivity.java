@@ -21,8 +21,10 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -36,25 +38,41 @@ public class MainActivity extends AppCompatActivity {
     Button wifibtn;
     Button databtn;
     NetworkInfo Info;
-
+    TextView title;
     CheckBox strongcb;
     CheckBox goodcb;
     CheckBox faircb;
     CheckBox weakcb;
+    CheckBox languagecb;
 
+//    WifiManager wifiManager;
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-
+//        wifiManager  =  (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        title =  findViewById(R.id.title);
         wifibtn =  findViewById(R.id.wifibtn);
         databtn =  findViewById(R.id.databtn);
         strongcb =  findViewById(R.id.strongcb);
         goodcb =  findViewById(R.id.goodcb);
         faircb =  findViewById(R.id.faircb);
         weakcb =  findViewById(R.id.weakcb);
+        languagecb =  findViewById(R.id.language);
+
+        languagecb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, ""+languagecb.isChecked(), Toast.LENGTH_SHORT).show();
+                if(languagecb.isChecked()){
+                    setAllViewToEnglish();
+                }else{
+                    setAllViewToHindi();
+                }
+            }
+        });
 
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refreshLayout);
         swipeRefreshLayout.setOnRefreshListener(
@@ -75,6 +93,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void setAllViewToHindi(){
+        strongcb.setText("Strong Signal");
+        goodcb.setText("Good Signal");
+        faircb.setText("Fair Signal");
+        weakcb.setText("Weak Signal");
+        wifibtn.setText("Wifi");
+        databtn.setText("Mobile Data");
+        title.setText("Signal Monitor");
+    }
+
+    public void setAllViewToEnglish(){
+        strongcb.setText("मजबूत संकेत");
+        goodcb.setText("अच्छा संकेत");
+        faircb.setText("ठीक संकेत");
+        weakcb.setText("कमजोर संकेत");
+        databtn.setText("मोबाइल नेटवर्क");
+        wifibtn.setText("वाई-फ़ाई");
+        title.setText("सिग्नल मॉनिटर");
+    }
     public void checkNetwork(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         Info = cm.getActiveNetworkInfo();

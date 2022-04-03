@@ -15,6 +15,19 @@
             android:layout_height="match_parent"
             android:background="@color/white">
 
+                <CheckBox
+                    android:layout_width="121dp"
+                    android:layout_height="57dp"
+                    android:textColor="@color/black"
+                    android:text="Hindi"
+                  
+                    android:id="@+id/language"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.448"
+                    app:layout_constraintStart_toStartOf="@+id/guideline8"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.95" />
 
                 <CheckBox
                     android:id="@+id/strongcb"
@@ -81,7 +94,6 @@
                     android:layout_weight="1"
                     android:background="@drawable/round_button_red"
                     android:text="Wifi"
-
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/guideline3"
@@ -146,6 +158,23 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:layout_constraintGuide_begin="261dp" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="276dp"
+                    android:layout_height="62dp"
+                    android:gravity="center"
+                    android:text="SIGNAL MONITOR"
+                    android:textAlignment="center"
+                    android:textColor="@color/teal_200"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.385"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.268" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
